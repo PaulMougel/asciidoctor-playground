@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/PaulMougel/asciidoctor-playground",
   "dependencies": {
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "underscore": "~1.6.0"
   }
 }
