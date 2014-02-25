@@ -3,6 +3,7 @@ var path = require('path');
 var child_process = require('child_process');
 var express = require('express');
 var _ = require('underscore');
+var busboy = require('connect-busboy');
 
 var config = require('./config');
 var srcDir = path.join(config.document_directory, 'src');
@@ -10,12 +11,18 @@ var renderedDir = path.join(config.document_directory, 'rendered');
 
 var app = express();
 
+app.use('/', express.static('public'));
+app.use('/document', busboy({ immediate: true }));
+
 app.get('/document', function (req, res) {
 	fs.readdir(renderedDir, function (err, files) {
 		if (err) return res.send(500, err.message);
-		res.send(_.filter(files, function (fileName) {
-			return fileName !== '.empty';
-		}));
+
+		var result = {
+			documents: _.filter(files, function (fileName) { return fileName !== '.empty';})
+		};
+
+		res.send(result);
 	})
 });
 
@@ -25,8 +32,11 @@ app.get('/document/:document_name.adoc', function (req, res) {
 app.post('/document/:document_name.adoc', function (req, res) {
 	var asciidoctor = child_process.spawn('asciidoctor', ['-']);
 	req.pipe(fs.createWriteStream(path.join(srcDir, req.params.document_name)));
-	req.pipe(asciidoctor.stdin);
-	
+
+	req.busboy.once('file', function (fieldname, file, filename, encoding, mimetype) {
+		file.pipe(asciidoctor.stdin);
+	});
+
 	var output = fs.createWriteStream(path.join(renderedDir, req.params.document_name));
 	asciidoctor.stdout.pipe(output);
 	asciidoctor.stdout.on('end', function () {
