@@ -4,6 +4,7 @@ var child_process = require('child_process');
 var express = require('express');
 var _ = require('underscore');
 var busboy = require('connect-busboy');
+var async = require('async');
 
 var config = require('./config');
 var srcDir = path.join(config.document_directory, 'src');
@@ -45,6 +46,18 @@ app.post('/document/:document_name.adoc', function (req, res) {
 	asciidoctor.stderr.on('data', function () {
 		res.send(500);
 	});
+});
+app.delete('/document/:document_name.adoc', function (req, res) {
+	async.parallel([
+		function (cb) {
+			fs.unlink(path.join(srcDir, req.params.document_name), cb)
+		},
+		function (cb) {
+			fs.unlink(path.join(renderedDir, req.params.document_name), cb)
+		}
+	], function (err) {
+		res.send(err ? 500 : 200);
+	})
 });
 app.get('/document/:document_name.html', function (req, res) {
 	res.set('Content-Type', 'text/html');

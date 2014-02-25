@@ -19,6 +19,10 @@ angular.module('asciidoctorplayground', [])
 			data: formdata,
 			headers: { 'Content-Type': undefined },
 			transformRequest: function(data) { return data; }
-		}).success(reload);
-	}
+		}).finally(reload);
+	};
+
+	$scope.delete = function (doc) {
+		$http.delete('/document/' + doc + '.adoc').finally(reload);
+	};
 });

@@ -24,7 +24,11 @@
 
 			<div ng-controller="DocumentListController">
 				<ul>
-					<li ng-repeat="doc in documents"><a href="document/{{ doc }}.html">{{ doc }}</a> (get <a href="document/{{ doc }}.adoc">raw</a>)</a></li>
+					<li ng-repeat="doc in documents">
+						<a href="document/{{ doc }}.html">{{ doc }}</a>
+						(get <a href="document/{{ doc }}.adoc">raw</a>)
+						<button ng-click="delete(doc)" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span></button>
+					</li>
 				</ul>
 
 				<form>
