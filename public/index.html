@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="asciidoctorplayground">
+	<head>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+
+		<script src="documents.js"></script>
+
+		<title>AsciiDoctor Playground</title>
+	</head>
+
+	<body>
+
+		<div class="container">
+			<h1>AsciiDoctor Playground</h1>
+
+			<div ng-controller="DocumentListController">
+				<ul>
+					<li ng-repeat="doc in documents"><a href="document/{{ doc }}.html">{{ doc }}</a> (get <a href="document/{{ doc }}.adoc">raw</a>)</a></li>
+				</ul>
+
+				<form>
+					<input type="file" onchange="angular.element(this).scope().upload(this)" accept=".adoc">
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
